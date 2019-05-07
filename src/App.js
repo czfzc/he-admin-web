@@ -5,6 +5,7 @@ import {Login} from "./pages/Login/Login"
 import axios from './common/axios';
 import {message} from 'antd'
 import cookie from './common/cookie'
+import './config'
 
 export default class App extends React.Component {
 
@@ -24,7 +25,7 @@ export default class App extends React.Component {
 
     tryLogin() {
         console.log("validating session_key")
-        axios("http://127.0.0.1:8081/admin/validate", {
+        axios(global.data.host+"/admin/validate", {
             session_key: cookie.getCookie("session_key")
         }).then((res) => {
             if (res.data.status) {
@@ -49,12 +50,12 @@ export default class App extends React.Component {
         }).then((res) => {
             console.log(res.data)
             if (res.data.status) {
+                cookie.setCookie("session_key", '')
+                cookie.setCookie("session_key", res.data.session_key)
                 this.setState({
                     isLogin: true,
                     session_key: res.data.session_key
                 })
-                cookie.setCookie("session_key", '')
-                cookie.setCookie("session_key", res.data.session_key)
             } else {
                 message.error('密码错误');
             }

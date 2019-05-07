@@ -1,6 +1,7 @@
 import React from 'react';
 import {message, Table, Popconfirm} from 'antd';
 import axios from "../../../common/axios";
+import "../../../config"
 
 export default class Refund extends React.Component {
 
@@ -18,40 +19,25 @@ export default class Refund extends React.Component {
         this.acceptRefund = this.acceptRefund.bind(this)
         this.refuseRefund = this.refuseRefund.bind(this)
 
-        this.setState({loading: true})
+        this.getData()
 
-        this.getTotal();
-        this.getData();
-
-        this.setState({loading: false})
-
-    }
-
-    getTotal() {
-        axios('http://127.0.0.1:8081/admin/get_total_refund', {
-            session_key: this.state.session_key,
-        }).then((res) => {
-            if (res.data.status === true) {
-                this.setState({
-                    pagination: {
-                        total: res.data.total,
-                        current: this.state.pagination.current,
-                        pageSize: this.state.pagination.pageSize
-                    }
-                })
-            }
-        })
     }
 
     getData() {
-        axios('http://127.0.0.1:8081/admin/get_refund', {
+        this.setState({loading: true})
+        axios(global.data.host+'/admin/get_refund', {
             session_key: this.state.session_key,
             page: this.state.pagination.current - 1,
             size: this.state.pagination.pageSize
         }).then((res) => {
             if (res.data.status !== false) {
                 this.setState({
-                    listData: res.data
+                    listData: res.data.content,
+                    pagination: {
+                        total: res.data.totalElements,
+                        current:this.state.pagination.current,
+                        pageSize:this.state.pagination.pageSize
+                    }
                 })
             } else {
                 message.error('加载失败')
@@ -59,6 +45,7 @@ export default class Refund extends React.Component {
         }).catch((error) => {
             message.error('网络错误')
         })
+        this.setState({loading: false})
 
     }
 
@@ -70,7 +57,7 @@ export default class Refund extends React.Component {
     }
 
     acceptRefund(refundId) {
-        axios('http://127.0.0.1:8081/admin/accept_refund', {
+        axios(global.data.host+'/admin/accept_refund', {
             session_key: this.state.session_key,
             refund_id: refundId
         }).then((res) => {
@@ -86,7 +73,7 @@ export default class Refund extends React.Component {
     }
 
     refuseRefund(refundId) {
-        axios('http://127.0.0.1:8081/admin/refuse_refund', {
+        axios(global.data.host+'/admin/refuse_refund', {
             session_key: this.state.session_key,
             refund_id: refundId
         }).then((res) => {
