@@ -44,7 +44,7 @@ export default class App extends React.Component {
             loading: true
         })
 
-        axios("http://127.0.0.1:8081/admin/login", {
+        axios(global.data.host+"/admin/login", {
             admin_id: name,
             raw_password: password
         }).then((res) => {

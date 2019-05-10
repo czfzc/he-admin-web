@@ -1,15 +1,23 @@
 import React from 'react';
-import {message, Table, Popconfirm, Input, Button, Icon} from 'antd';
+import {message, Table, Popconfirm, Input, Button, Icon, Menu} from 'antd';
 import axios from "../../../common/axios";
 import "../../../config"
 import Highlighter from 'react-highlight-words'
+
+const SubMenu = Menu.SubMenu;
+const MenuItemGroup = Menu.ItemGroup;
+
 
 export default class Express extends React.Component {
 
     state = {
         loading: false,
         dataIndex:'',
-        searchValue:''
+        searchValue:'',
+        pagination:{},
+        listData:[],
+        expressPoint:[],
+        ExpressPointNavCurrent:'all'
     }
 
     constructor(props) {
@@ -28,28 +36,77 @@ export default class Express extends React.Component {
 
     getData() {
         this.setState({loading: true})
-        axios(global.data.host+'/admin/get_express', {
-            session_key: this.state.session_key,
-            page: this.state.pagination.current - 1,
-            size: this.state.pagination.pageSize
-        }).then((res) => {
-            if (res.data.status !== false) {
+
+        if (this.state.ExpressPointNavCurrent == 'all') {
+            //获取快递
+            axios(global.data.host+'/admin/get_express', {
+                session_key: this.state.session_key,
+                page: this.state.pagination.current - 1,
+                size: this.state.pagination.pageSize
+            }).then((res) => {
+                if (res.data.status !== false) {
+                    this.setState({
+                        listData: res.data.content,
+                        pagination: {
+                            total: res.data.totalElements,
+                            current:this.state.pagination.current,
+                            pageSize:this.state.pagination.pageSize
+                        }
+                    })
+                } else {
+                    message.error('加载失败')
+                }
+            }).catch((error) => {
+                message.error('网络错误')
+            })
+
+            //获取快递点
+            axios(global.data.host+'/admin/get_express_point', {
+                session_key: this.state.session_key
+            }).then((res) => {
                 this.setState({
-                    listData: res.data.content,
-                    pagination: {
-                        total: res.data.totalElements,
-                        current:this.state.pagination.current,
-                        pageSize:this.state.pagination.pageSize
-                    }
+                    expressPoint:res.data
                 })
-            } else {
-                message.error('加载失败')
-            }
-        }).catch((error) => {
-            message.error('网络错误')
-        })
+            }).catch((error) => {
+                message.error('网络错误')
+            })
+        } else {
+            //获取快递
+            axios(global.data.host+'/admin/get_express_by_point', {
+                session_key: this.state.session_key,
+                page: this.state.pagination.current - 1,
+                size: this.state.pagination.pageSize,
+                express_point_id:this.state.ExpressPointNavCurrent
+            }).then((res) => {
+                if (res.data.status !== false) {
+                    this.setState({
+                        listData: res.data.content,
+                        pagination: {
+                            total: res.data.totalElements,
+                            current:this.state.pagination.current,
+                            pageSize:this.state.pagination.pageSize
+                        }
+                    })
+                } else {
+                    message.error('加载失败')
+                }
+            }).catch((error) => {
+                message.error('网络错误')
+            })
+        }
+
         this.setState({loading: false})
 
+    }
+
+
+    getExpressPointNameByExpressPointId(expressPointId){
+        let point=this.state.expressPoint;
+        for(let i=0;i<point.length;i++){
+            if(point[i].expressPointId==expressPointId)
+                return point[i].name;
+        }
+        return ''
     }
 
     handleChange=(pagination, filters, sorter) => {
@@ -57,7 +114,7 @@ export default class Express extends React.Component {
         this.setState({loading: true})
         if(this.state.searchValue!='')
             this.searchData()
-        else this.getData();
+        else this.getData()
         this.setState({loading: false})
     }
 
@@ -206,6 +263,46 @@ export default class Express extends React.Component {
     }
 
 
+
+    handleExpressPointNavClick = (e)=>{
+        if(e.key!=this.state.ExpressPointNavCurrent) {
+            this.state.ExpressPointNavCurrent = e.key;
+            this.state.pagination.current=1;
+            this.getData()
+            //重新渲染页数为1
+            this.setState({
+                pagination: {
+                    total: this.state.pagination.total,
+                    current:this.state.pagination.current,
+                    pageSize:this.state.pagination.pageSize
+                }
+            })
+        }
+    }
+
+    rendExpressPointNav(){
+        return (
+            <Menu
+                onClick={this.handleExpressPointNavClick}
+                selectedKeys={[this.state.ExpressPointNavCurrent]}
+                mode="horizontal"
+            >
+                <Menu.Item key="all">
+                    <Icon type="mail" />所有
+                </Menu.Item>
+                {
+                    this.state.expressPoint.map((item,index)=>{
+                        return <Menu.Item key={item.expressPointId}>
+                            <Icon type="mail" />{item.name}
+                        </Menu.Item>
+                    })
+                }
+            </Menu>
+        )
+    }
+
+
+
     render() {
         const columns = [{
             title: '快递代取号',
@@ -222,25 +319,32 @@ export default class Express extends React.Component {
             dataIndex: 'name',
             key: '3'
         }, {
+            title: '快递点',
+            dataIndex: 'expressPointId',
+            key: '4',
+            render:(text,record)=>{
+                return this.getExpressPointNameByExpressPointId(record.expressPointId)
+            }
+        }, {
             title: '快递手机号',
             dataIndex: 'time',
-            key: '4'
+            key: '5'
         }, {
             title: '单价',
             dataIndex: 'totalFee',
-            key: '5'
+            key: '6'
         },{
             title: '短信内容',
             dataIndex: 'smsContent',
-            key: '6'
+            key: '7'
         },{
             title:'收货码',
             dataIndex:'receiveCode',
-            key: '7'
+            key: '8'
         },{
             title: '送达情况',
             dataIndex: 'status',
-            key: '8',
+            key: '9',
             render:(text,record)=>{
                 if(record.status==0)
                     return '未领取'
@@ -253,18 +357,18 @@ export default class Express extends React.Component {
         },{
             title:'下单时间',
             dataIndex:'time',
-            key: '9'
+            key: '10'
         },{
             title: '状态',
             dataIndex: 'abled',
-            key: '10',
+            key: '11',
             render: (text, record) => {
                 return record.abled ? '正常' : '被冻结'
             }
         },{
             title:'操作',
             dataIndex: '',
-            key:'11',
+            key:'12',
             render: (text,record)=>{
                 return (
                     <div>
@@ -273,12 +377,18 @@ export default class Express extends React.Component {
                 )
             }
         }]
+
         return (
+            <div>
+                {
+                    this.rendExpressPointNav()
+                }
             <Table columns={columns}
                    dataSource={this.state.listData}
                    pagination={this.state.pagination}
                    loading={this.state.loading}
                    onChange={this.handleChange}/>
+            </div>
         )
     }
 
