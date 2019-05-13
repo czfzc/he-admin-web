@@ -3,23 +3,25 @@ import {message, Table, Popconfirm, Input, Button, Icon} from 'antd';
 import axios from "../../../common/axios";
 import "../../../config"
 import Highlighter from 'react-highlight-words'
+import ExpressTable from "../../../components/ExpressTable";
 
 export default class ExpressPreorder extends React.Component {
 
     state = {
-        loading: false
+        loading: false,
+        session_key : global.data.session_key,
+        pagination : global.data.pagination
     }
 
     constructor(props) {
         super(props)
 
-        this.state.session_key = props.session_key;
-        this.state.pagination = props.pagination;
-
         this.handleChange=this.handleChange.bind(this)
 
-        this.getData()
+    }
 
+    componentDidMount() {
+        this.getData()
     }
 
 
@@ -168,6 +170,10 @@ export default class ExpressPreorder extends React.Component {
         });
     }
 
+    expressRender=(record, index, indent, expanded)=>{
+        return <ExpressTable listData={record.express}/>
+    }
+
 
     render() {
         const columns = [{
@@ -222,7 +228,9 @@ export default class ExpressPreorder extends React.Component {
                    dataSource={this.state.listData}
                    pagination={this.state.pagination}
                    loading={this.state.loading}
-                   onChange={this.handleChange}/>
+                   onChange={this.handleChange}
+                   rowKey={record => record.id}
+                   expandedRowRender={this.expressRender}/>
         )
     }
 

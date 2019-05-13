@@ -6,21 +6,22 @@ import "../../../config"
 export default class Refund extends React.Component {
 
     state = {
-        loading: false
+        loading: false,
+        session_key : global.data.session_key,
+        pagination : global.data.pagination
     }
 
     constructor(props) {
         super(props)
 
-        this.state.session_key = props.session_key;
-        this.state.pagination = props.pagination;
-
         this.handleChange = this.handleChange.bind(this)
         this.acceptRefund = this.acceptRefund.bind(this)
         this.refuseRefund = this.refuseRefund.bind(this)
 
-        this.getData()
+    }
 
+    componentDidMount() {
+        this.getData()
     }
 
     getData() {
@@ -148,7 +149,8 @@ export default class Refund extends React.Component {
                    dataSource={this.state.listData}
                    pagination={this.state.pagination}
                    loading={this.state.loading}
-                   onChange={this.handleChange}/>
+                   onChange={this.handleChange}
+                   rowKey={record => record.refundId}/>
         )
     }
 

@@ -3,30 +3,75 @@ import {message, Table, Popconfirm, Input, Button, Icon} from 'antd';
 import Highlighter from 'react-highlight-words';
 import axios from "../../../common/axios";
 import "../../../config"
+import PreorderTable from "../../../components/PreorderTable"
 
 export default class Order extends React.Component {
 
     state = {
         loading: false,
         searchValue: '',
-        dataIndex: ''
+        dataIndex: '',
+        session_key : global.data.session_key,
+        pagination : global.data.pagination
     }
 
     constructor(props) {
         super(props)
 
-        this.state.session_key = props.session_key;
-        this.state.pagination = props.pagination;
+
 
         this.handleChange=this.handleChange.bind(this)
         this.refund=this.refund.bind(this)
         this.disable=this.disable.bind(this)
         this.enable=this.enable.bind(this)
 
-        this.getData();
-
     }
 
+    componentDidMount() {
+        this.getData()
+        this.getExpressData()
+    }
+
+    /**
+     * 获取快递点数据和快递大小数据
+     */
+    getExpressData(){
+        //获取快递点
+        axios(global.data.host+'/admin/get_express_point', {
+            session_key: this.state.session_key
+        }).then((res) => {
+            global.data.expressPoint=res.data
+        }).catch((error) => {
+            message.error('网络错误')
+        })
+
+        //获取快递大小
+        axios(global.data.host+'/admin/get_express_size', {
+            session_key: this.state.session_key
+        }).then((res) => {
+            global.data.expressSize=res.data
+        }).catch((error) => {
+            message.error('网络错误')
+        })
+
+        //获取快递价格
+        axios(global.data.host+'/admin/get_express_price', {
+            session_key: this.state.session_key
+        }).then((res) => {
+            global.data.expressPrice=res.data
+        }).catch((error) => {
+            message.error('网络错误')
+        })
+
+        //获取快递大小
+        axios(global.data.host+'/admin/get_building', {
+            session_key: this.state.session_key
+        }).then((res) => {
+            global.data.building=res.data
+        }).catch((error) => {
+            message.error('网络错误')
+        })
+    }
 
     getData() {
         this.setState({loading: true})
@@ -223,7 +268,9 @@ export default class Order extends React.Component {
         });
     }
 
-
+    preorderRender = (record, index, indent, expanded) => {
+        return <PreorderTable listData={record.preorder}/>
+    }
 
     render() {
 
@@ -295,7 +342,9 @@ export default class Order extends React.Component {
                    dataSource={this.state.listData}
                    pagination={this.state.pagination}
                    loading={this.state.loading}
-                   onChange={this.handleChange}/>
+                   onChange={this.handleChange}
+                   rowKey={record => record.orderId}
+                   expandedRowRender={this.preorderRender}/>
         )
     }
 
