@@ -8,7 +8,7 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 
-export default class Express extends React.Component {
+export class Express extends React.Component {
 
     state = {
         loading: false,
@@ -194,6 +194,7 @@ export default class Express extends React.Component {
         },
         render: (text) => (
             <Highlighter
+                style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
                 highlightStyle={{backgroundColor: '#ffc069', padding: 0}}
                 searchWords={[dataIndex == this.state.dataIndex ? this.state.searchValue : '']}
                 autoEscape
@@ -304,13 +305,13 @@ export default class Express extends React.Component {
         if (record.status === 0)
             return (
                 <Popconfirm title="确定取到货了?"
-                            onConfirm={this.withdraw.bind(this, record.expressId)} okText="Yes" cancelText="No">
+                            onConfirm={this.withdraw.bind(this, record.expressId)} okText="确定" cancelText="取消">
                     <a>设置已取货</a></Popconfirm>
             )
         else if (record.status === 1)
             return (
                 <Popconfirm title="确定送到手了?"
-                            onConfirm={this.sended.bind(this, record.expressId)} okText="Yes" cancelText="No">
+                            onConfirm={this.sended.bind(this, record.expressId)} okText="确定" cancelText="取消">
                     <a>设置已送达</a></Popconfirm>
             )
     }
@@ -319,24 +320,29 @@ export default class Express extends React.Component {
         const columns = [{
             title: '快递代取号',
             dataIndex: 'expressId',
+            width:100,
             key: '1',
             ...this.getColumnSearchProps('expressId')
         }, {
             title: '用户手机号',
             dataIndex: 'userId',
+            width:100,
             key: '2',
             ...this.getColumnSearchProps('userId')
         }, {
             title: '快递姓名',
             dataIndex: 'name',
+            width:100,
             key: '3'
         }, {
             title: '快递手机号',
-            dataIndex: 'time',
+            dataIndex: 'phoneNum',
+            width:100,
             key: '4'
         }, {
             title: '快递点',
             dataIndex: 'expressPointId',
+            width:100,
             key: '5',
             render: (text, record) => {
                 return this.getExpressPointNameByExpressPointId(record.expressPointId)
@@ -344,26 +350,39 @@ export default class Express extends React.Component {
         }, {
             title: '快递大小',
             dataIndex: 'sizeId',
+            width:100,
             key: '6',
             render: (text, record) => {
                 return this.getExpressSizeNameBySizeId(record.sizeId)
             }
         }, {
+            title: '送货方式',
+            dataIndex: 'sendMethodId',
+            width:100,
+            key: '7',
+            render: (text, record) => {
+                return global.data.getValueById('sendMethodId',text)
+            }
+        },{
             title: '单价',
             dataIndex: 'totalFee',
-            key: '7'
+            width:100,
+            key: '8'
         }, {
             title: '短信内容',
             dataIndex: 'smsContent',
-            key: '8'
+            width:100,
+            key: '9'
         }, {
             title: '收货码',
             dataIndex: 'receiveCode',
-            key: '9'
+            width:100,
+            key: '10'
         }, {
             title: '送达情况',
             dataIndex: 'status',
-            key: '10',
+            width:100,
+            key: '11',
             render: (text, record) => {
                 if (record.status == 0)
                     return '未领取'
@@ -376,18 +395,21 @@ export default class Express extends React.Component {
         }, {
             title: '下单时间',
             dataIndex: 'time',
-            key: '11'
+            width:100,
+            key: '12'
         }, {
             title: '状态',
             dataIndex: 'abled',
-            key: '12',
+            width:100,
+            key: '13',
             render: (text, record) => {
                 return record.abled ? '正常' : '被冻结'
             }
         }, {
             title: '操作',
             dataIndex: '',
-            key: '13',
+            width:100,
+            key: '14',
             render: (text, record) => {
                 return (
                     <div>
@@ -407,6 +429,9 @@ export default class Express extends React.Component {
                        pagination={this.state.pagination}
                        loading={this.state.loading}
                        onChange={this.handleChange}
+                       bordered
+                       size="middle"
+                       scroll={{ x: 1400 }}
                        rowKey={record => record.expressId}/>
             </div>
         )

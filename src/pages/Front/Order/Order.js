@@ -5,7 +5,7 @@ import axios from "../../../common/axios";
 import "../../../config"
 import PreorderTable from "../../../components/PreorderTable"
 
-export default class Order extends React.Component {
+export class Order extends React.Component {
 
     state = {
         loading: false,
@@ -54,20 +54,20 @@ export default class Order extends React.Component {
             message.error('网络错误')
         })
 
-        //获取快递价格
-        axios(global.data.host+'/admin/get_express_price', {
-            session_key: this.state.session_key
-        }).then((res) => {
-            global.data.expressPrice=res.data
-        }).catch((error) => {
-            message.error('网络错误')
-        })
-
         //获取快递大小
         axios(global.data.host+'/admin/get_building', {
             session_key: this.state.session_key
         }).then((res) => {
             global.data.building=res.data
+        }).catch((error) => {
+            message.error('网络错误')
+        })
+
+        //获取送货方式
+        axios(global.data.host+'/admin/get_send_method', {
+            session_key: this.state.session_key
+        }).then((res) => {
+            global.data.expressSendMethod=res.data
         }).catch((error) => {
             message.error('网络错误')
         })
@@ -100,11 +100,9 @@ export default class Order extends React.Component {
 
     handleChange=(pagination, filters, sorter) => {
         this.state.pagination=pagination;
-        this.setState({loading: true})
         if(this.state.searchValue!='')
             this.searchData()
         else this.getData();
-        this.setState({loading: false})
     }
 
     refund(orderId){
@@ -241,6 +239,7 @@ export default class Order extends React.Component {
             <Highlighter
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[dataIndex==this.state.dataIndex?this.state.searchValue:'']}
+                style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
                 autoEscape
                 textToHighlight={text.toString()}
             />
@@ -277,24 +276,29 @@ export default class Order extends React.Component {
         const columns = [{
             title: '订单号',
             dataIndex: 'orderId',
+            width:100,
             key: '1',
             ...this.getColumnSearchProps('orderId')
         },{
             title: '用户手机号',
             dataIndex: 'userId',
+            width:100,
             key: '2',
             ...this.getColumnSearchProps('userId')
         }, {
             title: '总价',
             dataIndex: 'totalFee',
+            width:100,
             key: '3'
         }, {
             title: '下单时间',
             dataIndex: 'time',
+            width:100,
             key: '4'
         }, {
             title: '付款情况',
             dataIndex: 'payed',
+            width:100,
             key: '5',
             render: (text, record) => {
                 if (record.payed === 0)
@@ -309,6 +313,7 @@ export default class Order extends React.Component {
         }, {
             title: '状态',
             dataIndex: 'abled',
+            width:100,
             key: '6',
             render: (text, record) => {
                 return record.abled ? '正常' : '被冻结'
@@ -316,6 +321,7 @@ export default class Order extends React.Component {
         },{
             title: '操作',
             dataIndex: '',
+            width:100,
             key: '7',
             render: (text, record) => {
                 return (
@@ -344,6 +350,8 @@ export default class Order extends React.Component {
                    loading={this.state.loading}
                    onChange={this.handleChange}
                    rowKey={record => record.orderId}
+                   scroll={{ x: 700 }}
+                   bordered
                    expandedRowRender={this.preorderRender}/>
         )
     }

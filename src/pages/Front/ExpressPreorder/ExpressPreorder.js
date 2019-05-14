@@ -5,7 +5,7 @@ import "../../../config"
 import Highlighter from 'react-highlight-words'
 import ExpressTable from "../../../components/ExpressTable";
 
-export default class ExpressPreorder extends React.Component {
+export class ExpressPreorder extends React.Component {
 
     state = {
         loading: false,
@@ -102,6 +102,7 @@ export default class ExpressPreorder extends React.Component {
             <Highlighter
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[dataIndex==this.state.dataIndex?this.state.searchValue:'']}
+                style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
                 autoEscape
                 textToHighlight={text.toString()}
             />
@@ -179,24 +180,29 @@ export default class ExpressPreorder extends React.Component {
         const columns = [{
             title: '预付单号',
             dataIndex: 'id',
+            width:100,
             key: '1',
             ...this.getColumnSearchProps('id')
         },{
             title: '用户手机号',
             dataIndex: 'userId',
+            width:100,
             key: '2',
             ...this.getColumnSearchProps('userId')
         }, {
             title: '预付单总价',
             dataIndex: 'totalFee',
+            width:100,
             key: '3'
         }, {
             title: '下单时间',
             dataIndex: 'time',
+            width:100,
             key: '4'
         }, {
             title: '付款情况',
             dataIndex: 'payed',
+            width:100,
             key: '5',
             render: (text, record) => {
                 if (record.payed === 0)
@@ -211,6 +217,7 @@ export default class ExpressPreorder extends React.Component {
         }, {
             title: '状态',
             dataIndex: 'abled',
+            width:100,
             key: '6',
             render: (text, record) => {
                 return record.abled ? '正常' : '被冻结'
@@ -218,6 +225,7 @@ export default class ExpressPreorder extends React.Component {
         },{
             title: '业务种类',
             dataIndex: 'abled',
+            width:100,
             key: '7',
             render: (text, record) => {
                 return '快递代取'
@@ -230,6 +238,8 @@ export default class ExpressPreorder extends React.Component {
                    loading={this.state.loading}
                    onChange={this.handleChange}
                    rowKey={record => record.id}
+                   scroll={{ x: 700 }}
+                   bordered
                    expandedRowRender={this.expressRender}/>
         )
     }

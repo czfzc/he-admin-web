@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
-import Index from "./pages/Index/Index";
+import {Index} from "./pages/Index/Index";
 import {Login} from "./pages/Login/Login"
 import axios from './common/axios';
 import {message} from 'antd'
 import cookie from './common/cookie'
 import './config'
 
-export default class App extends React.Component {
+export class App extends React.Component {
 
     constructor(props) {
         super(props)

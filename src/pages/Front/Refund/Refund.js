@@ -3,7 +3,7 @@ import {message, Table, Popconfirm} from 'antd';
 import axios from "../../../common/axios";
 import "../../../config"
 
-export default class Refund extends React.Component {
+export class Refund extends React.Component {
 
     state = {
         loading: false,
@@ -95,27 +95,39 @@ export default class Refund extends React.Component {
         const columns = [{
             title: '退款单号',
             dataIndex: 'refundId',
-            key: '1'
+            width:100,
+            key: '1',
+            render:(text,record)=>{
+                return <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>
+            }
         }, {
             title: '对应订单号',
             dataIndex: 'orderId',
-            key: '2'
+            width:100,
+            key: '2',
+            render:(text,record)=>{
+                return <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>
+            }
         }, {
             title: '时间',
             dataIndex: 'time',
+            width:100,
             key: '3'
         }, {
             title: '理由',
             dataIndex: 'reason',
+            width:100,
             key: '4'
         }, {
             title: '用户手机号',
             dataIndex: 'userId',
+            width:100,
             key: '5'
         }, {
             title: '状态',
             dataIndex: 'refused',
             key: '6',
+            width:100,
             render: (text, record) => {
                 if (record.succeed)
                     return '成功'
@@ -125,6 +137,7 @@ export default class Refund extends React.Component {
             title: '操作',
             dataIndex: '',
             key: '7',
+            width:100,
             render: (text, record) => {
                 return (
                     <div>
@@ -150,7 +163,10 @@ export default class Refund extends React.Component {
                    pagination={this.state.pagination}
                    loading={this.state.loading}
                    onChange={this.handleChange}
-                   rowKey={record => record.refundId}/>
+                   scroll={{ x: 700 }}
+                   bordered
+                   rowKey={record => record.refundId}
+            />
         )
     }
 

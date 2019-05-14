@@ -4,11 +4,11 @@ import {
     Layout, Menu, Breadcrumb, Icon, List, Avatar, Table
 } from 'antd';
 import cookie from '../../common/cookie'
-import Order from '../Front/Order/Order'
-import ExpressPreorder from '../Front/ExpressPreorder/ExpressPreorder'
-import Express from '../Front/Express/Express'
-import Refund from '../Front/Refund/Refund'
-import ExpressPrice from '../Front/ExpressPrice/ExpressPrice'
+import {Order} from '../Front/Order/Order'
+import {ExpressPreorder} from '../Front/ExpressPreorder/ExpressPreorder'
+import {Express} from '../Front/Express/Express'
+import {Refund} from '../Front/Refund/Refund'
+import {ExpressPrice} from '../Front/ExpressPrice/ExpressPrice'
 
 const {SubMenu} = Menu;
 const {
@@ -16,7 +16,7 @@ const {
 } = Layout;
 
 
-export default class Index extends React.Component {
+export class Index extends React.Component {
 
     state = {
         index: 1,

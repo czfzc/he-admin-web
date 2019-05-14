@@ -1,6 +1,4 @@
-import {
-    Table, Input, InputNumber, Popconfirm, Form,
-} from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form } from 'antd';
 
 const data = [];
 for (let i = 0; i < 100; i++) {
@@ -14,41 +12,37 @@ for (let i = 0; i < 100; i++) {
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
-class   EditableCell extends React.Component {
-    getInp1ut = () => {
+class EditableCell extends React.Component {
+    getInput = () => {
         if (this.props.inputType === 'number') {
-            return <InputNumber/>;
+            return <InputNumber />;
         }
-        return <Input/>;
+        return <Input />;
     };
 
     render() {
-        const {
-            editing,
-            dataIndex,
-            title,
-            inputType,
-            record,
-            index,
-            ...restProps
-        } = this.props;
+        const { editing, dataIndex, title, inputType, record, index, ...restProps } = this.props;
         return (
             <EditableContext.Consumer>
-                {(form) => {
-                    const {getFieldDecorator} = form;
+                {form => {
+                    const { getFieldDecorator } = form;
                     return (
                         <td {...restProps}>
                             {editing ? (
-                                <FormItem style={{margin: 0}}>
+                                <FormItem style={{ margin: 0 }}>
                                     {getFieldDecorator(dataIndex, {
-                                        rules: [{
-                                            required: true,
-                                            message: `Please Input ${title}!`,
-                                        }],
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: `Please Input ${title}!`,
+                                            },
+                                        ],
                                         initialValue: record[dataIndex],
                                     })(this.getInput())}
                                 </FormItem>
-                            ) : restProps.children}
+                            ) : (
+                                restProps.children
+                            )}
                         </td>
                     );
                 }}
@@ -60,7 +54,7 @@ class   EditableCell extends React.Component {
 class EditableTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {data, editingKey: ''};
+        this.state = { data, editingKey: '' };
         this.columns = [
             {
                 title: 'name',
@@ -84,7 +78,7 @@ class EditableTable extends React.Component {
                 title: 'operation',
                 dataIndex: 'operation',
                 render: (text, record) => {
-                    const {editingKey} = this.state;
+                    const { editingKey } = this.state;
                     const editable = this.isEditing(record);
                     return (
                         <div>
@@ -95,21 +89,20 @@ class EditableTable extends React.Component {
                         <a
                             href="javascript:;"
                             onClick={() => this.save(form, record.key)}
-                            style={{marginRight: 8}}
+                            style={{ marginRight: 8 }}
                         >
                             Save
                         </a>
                     )}
                   </EditableContext.Consumer>
-                  <Popconfirm
-                      title="Sure to cancel?"
-                      onConfirm={() => this.cancel(record.key)}
-                  >
+                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
                     <a>Cancel</a>
                   </Popconfirm>
                 </span>
                             ) : (
-                                <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>Edit</a>
+                                <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
+                                    Edit
+                                </a>
                             )}
                         </div>
                     );
@@ -121,7 +114,7 @@ class EditableTable extends React.Component {
     isEditing = record => record.key === this.state.editingKey;
 
     cancel = () => {
-        this.setState({editingKey: ''});
+        this.setState({ editingKey: '' });
     };
 
     save(form, key) {
@@ -137,16 +130,16 @@ class EditableTable extends React.Component {
                     ...item,
                     ...row,
                 });
-                this.setState({data: newData, editingKey: ''});
+                this.setState({ data: newData, editingKey: '' });
             } else {
                 newData.push(row);
-                this.setState({data: newData, editingKey: ''});
+                this.setState({ data: newData, editingKey: '' });
             }
         });
     }
 
     edit(key) {
-        this.setState({editingKey: key});
+        this.setState({ editingKey: key });
     }
 
     render() {
@@ -156,7 +149,7 @@ class EditableTable extends React.Component {
             },
         };
 
-        const columns = this.columns.map((col) => {
+        const columns = this.columns.map(col => {
             if (!col.editable) {
                 return col;
             }
@@ -191,4 +184,4 @@ class EditableTable extends React.Component {
 
 const EditableFormTable = Form.create()(EditableTable);
 
-ReactDOM.render(<EditableFormTable/>, mountNode);
+ReactDOM.render(<EditableFormTable />, mountNode);
