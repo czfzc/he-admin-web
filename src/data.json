@@ -58,3 +58,156 @@
     }
   ]
 ]
+
+{
+  "content": [
+    {
+      "mainkey": 1456,
+      "destBuildingId": "125",
+      "expressPointId": "112211",
+      "price": 0.19,
+      "sizeId": "0",
+      "sendMethodId": "3"
+    },
+    {
+      "mainkey": 1458,
+      "destBuildingId": "124",
+      "expressPointId": "221111",
+      "price": 0.35,
+      "sizeId": "1",
+      "sendMethodId": "2"
+    },
+    {
+      "mainkey": 1457,
+      "destBuildingId": "123",
+      "expressPointId": "111122",
+      "price": 0.17,
+      "sizeId": "1",
+      "sendMethodId": "3"
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "offset": 0,
+    "pageSize": 10,
+    "pageNumber": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": true,
+  "totalPages": 1,
+  "totalElements": 3,
+  "number": 0,
+  "sort": {
+    "sorted": true,
+    "unsorted": false,
+    "empty": false
+  },
+  "size": 10,
+  "first": true,
+  "numberOfElements": 3,
+  "empty": false
+}
+
+[
+  {
+    "id": "1",
+    "value": "12:00左右送达",
+    "serviceId": "1",
+    "abled": false
+  },
+  {
+    "id": "2",
+    "value": "18:00左右送达",
+    "serviceId": "1",
+    "abled": true
+  },
+  {
+    "id": "3",
+    "value": "2小时内送达",
+    "serviceId": "1",
+    "abled": true
+  }
+]
+
+[
+  {
+    "name": "快递代取",
+    "abled": true,
+    "show": true,
+    "id": 1
+  },
+  {
+    "name": "快递代取月卡购买",
+    "abled": true,
+    "show": false,
+    "id": 9
+  }
+]
+
+[
+  {
+    "expressPointId": "111122",
+    "position": "[1,3]",
+    "name": "近邻宝",
+    "smsTemp": "【近邻宝】请用微信或密码63178402到东大游泳馆东侧五四体育场东南角3号柜C27箱取件。询13066696859\r\n",
+    "codeFormat": "nnnnnnnn",
+    "abled": false
+  },
+  {
+    "expressPointId": "112211",
+    "position": "[1,2]",
+    "name": "菜鸟驿站",
+    "smsTemp": "【菜鸟驿站】您的百世快递包裹到东大校内七舍北侧菜鸟驿站，请17:30前凭1-1-6200及时取，询19904053317\r\n",
+    "codeFormat": "n-n-nnnn",
+    "abled": false
+  },
+  {
+    "expressPointId": "221111",
+    "position": "[2,2]",
+    "name": "京东物流",
+    "smsTemp": "【京东物流】货号5916您好，您的快递到东北大学京东派（小北门西30米），营业时间早9:00-晚6点，电话13309816129\r\n",
+    "codeFormat": "nnnn",
+    "abled": false
+  }
+]
+
+[
+  {
+    "sizeId": "0",
+    "sizeName": "小",
+    "abled": false
+  },
+  {
+    "sizeId": "1",
+    "sizeName": "中",
+    "abled": false
+  },
+  {
+    "sizeId": "2",
+    "sizeName": "大",
+    "abled": false
+  }
+]
+
+[
+  {
+    "id": "123",
+    "name": "逸夫楼",
+    "position": "1,5"
+  },
+  {
+    "id": "124",
+    "name": "何事礼",
+    "position": "1,4"
+  },
+  {
+    "id": "125",
+    "name": "大成",
+    "position": "2,3"
+  }
+]

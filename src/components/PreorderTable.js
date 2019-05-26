@@ -1,8 +1,5 @@
 import React from 'react';
-import {message, Table, Popconfirm, Input, Button, Icon} from 'antd';
-import axios from "../common/axios";
-import "../config"
-import Highlighter from 'react-highlight-words'
+import {Table} from 'antd';
 import ExpressTable from "./ExpressTable";
 
 export default class PreorderTable extends React.Component {

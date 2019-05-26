@@ -129,9 +129,17 @@ export class Refund extends React.Component {
             key: '6',
             width:100,
             render: (text, record) => {
-                if (record.succeed)
-                    return '成功'
-                else return record.refused ? '被拒绝' : '请求退款'
+                if(record.payed===0)
+                    return '异常'
+                else if(record.payed===1)
+                    return '异常'
+                else if(record.payed===2)
+                    return '退款成功'
+                else if(record.payed===3)
+                    return '请求退款'
+                else if(record.payed===4)
+                    return '退款被拒绝'
+                return '暂无'
             }
         }, {
             title: '操作',
@@ -139,22 +147,25 @@ export class Refund extends React.Component {
             key: '7',
             width:100,
             render: (text, record) => {
-                return (
-                    <div>
-                        {(!record.refused) && (!record.succeed) ?
-                            <div><Popconfirm title="确定通过退款，钱款原路返回?"
-                                             onConfirm={this.acceptRefund.bind(this, record.orderId)} okText="Yes"
-                                             cancelText="No">
-                                <a>通过</a></Popconfirm>/
-                                <Popconfirm title="确定拒绝退款，不可反悔?"
-                                            onConfirm={this.refuseRefund.bind(this, record.orderId)} okText="Yes"
-                                            cancelText="No">
-                                    <a>拒绝</a></Popconfirm></div>
-                            : null
-                        }
-                    </div>
+                if(record.payed===3) {
+                    return (
+                        <div>
+                            {(!record.refused) && (!record.succeed) ?
+                                <div><Popconfirm title="确定通过退款，钱款原路返回?"
+                                                 onConfirm={this.acceptRefund.bind(this, record.refundId)} okText="Yes"
+                                                 cancelText="No">
+                                    <a>通过</a></Popconfirm>/
+                                    <Popconfirm title="确定拒绝退款，不可反悔?"
+                                                onConfirm={this.refuseRefund.bind(this, record.refundId)} okText="Yes"
+                                                cancelText="No">
+                                        <a>拒绝</a></Popconfirm></div>
+                                : null
+                            }
+                        </div>
 
-                )
+                    )
+                }
+                return null
             }
         }]
         return (

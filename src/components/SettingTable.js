@@ -2,9 +2,8 @@ import React from 'react'
 import {
     Table, Input, InputNumber, Popconfirm, Form, message, Select, Icon, Divider, Button
 } from 'antd'
-import axios from "../../../common/axios";
-import './ExpressPrice.css'
-import "../../../config"
+import axios from "../common/axios";
+import "../config"
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
@@ -12,29 +11,25 @@ const Option = Select.Option;
 
 class SelectList extends React.Component {
 
+    state={
+    }
+
     constructor(props){
         super(props)
+        this.state={
+            initDataPostFunction:this.props.initDataPostFunction,
+            addNewDataPostFunction:this.props.addNewDataPostFunction,
+            editDataPostFunction:this.props.editDataPostFunction,
+            getDataByIdFunction:this.props.getDataByIdFunction,
+            column:this.props.column
+        }
     }
 
     listData(){
         const id=this.props.id
-        if(id==='destBuildingId'){
-            return global.data.building.map((item)=>{
-                return <Option key={item.id} value={item.id}>{item.name}</Option>
-            })
-        }else if(id==="expressPointId"){
-            return global.data.expressPoint.map((item)=>{
-                return <Option key={item.expressPointId} value={item.expressPointId}>{item.name}</Option>
-            })
-        }else if(id==="sizeId"){
-            return global.data.expressSize.map((item)=>{
-                return <Option key={item.sizeId} value={item.sizeId}>{item.sizeName}</Option>
-            })
-        }else if(id==="sendMethodId"){
-            return global.data.expressSendMethod.map((item)=>{
-                return <Option key={item.id} value={item.id}>{item.value}</Option>
-            })
-        }
+        return global.data.building.map((item)=>{
+            return <Option key={item.id} value={item.id}>{item.name}</Option>
+        })
     }
 
 

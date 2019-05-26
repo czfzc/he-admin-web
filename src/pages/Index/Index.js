@@ -1,14 +1,16 @@
 import React from 'react';
 import './Index.css';
-import {
-    Layout, Menu, Breadcrumb, Icon, List, Avatar, Table
-} from 'antd';
+import {Menu, Breadcrumb,Icon,Layout} from 'antd';
 import cookie from '../../common/cookie'
 import {Order} from '../Front/Order/Order'
 import {ExpressPreorder} from '../Front/ExpressPreorder/ExpressPreorder'
 import {Express} from '../Front/Express/Express'
 import {Refund} from '../Front/Refund/Refund'
 import {ExpressPrice} from '../Front/ExpressPrice/ExpressPrice'
+import {SendMethod} from '../Front/SendMethod/SendMethod'
+import {ExpressPoint} from '../Front/ExpressPoint/ExpressPoint'
+import {ExpressSize} from '../Front/ExpressSize/ExpressSize'
+import {DestPoint} from '../Front/DestPoint/DestPoint'
 
 const {SubMenu} = Menu;
 const {
@@ -34,23 +36,39 @@ export class Index extends React.Component {
         switch (this.state.index) {
             case 1:
                 return (
-                    <Order/>
+                    <Order />
                 )
             case 2:
                 return (
-                    <ExpressPreorder/>
+                    <ExpressPreorder />
                 )
             case 3:
                 return (
-                    <Express/>
+                    <Express />
                 )
             case 4:
                 return (
-                    <Refund/>
+                    <Refund />
                 )
             case 5:
                 return (
-                    <ExpressPrice/>
+                    <ExpressPrice />
+                )
+            case 9:
+                return (
+                    <SendMethod />
+                )
+            case 8:
+                return (
+                    <ExpressPoint />
+                )
+            case 11:
+                return (
+                    <ExpressSize />
+                )
+            case 10:
+                return (
+                    <DestPoint />
                 )
         }
 
@@ -94,16 +112,16 @@ export class Index extends React.Component {
                             >
                                 <SubMenu key="sub1" title={<span><Icon type="solution"/>订单管理</span>}>
                                     <Menu.Item key="1" onClick={this.selectList.bind(this, 1)}>总订单</Menu.Item>
-                                    <Menu.Item key="2" onClick={this.selectList.bind(this, 2)}>快递代取预付单</Menu.Item>
-                                </SubMenu>
-                                <SubMenu key="sub2" title={<span><Icon type="tool"/>综合管理</span>}>
-                                    <Menu.Item key="3" onClick={this.selectList.bind(this, 3)}>代取快递</Menu.Item>
-                                </SubMenu>
-                                <SubMenu key="sub3" title={<span><Icon type="exception"/>退款情况</span>}>
+                                    <Menu.Item key="2" onClick={this.selectList.bind(this, 2)}>预付单</Menu.Item>
                                     <Menu.Item key="4" onClick={this.selectList.bind(this, 4)}>退款订单</Menu.Item>
                                 </SubMenu>
-                                <SubMenu key="sub4" title={<span><Icon type="tool"/>业务管理</span>}>
+                                <SubMenu key="sub2" title={<span><Icon type="tool"/>快递管理</span>}>
+                                    <Menu.Item key="3" onClick={this.selectList.bind(this, 3)}>代取快递列表</Menu.Item>
                                     <Menu.Item key="5" onClick={this.selectList.bind(this, 5)}>代取快递价格管理</Menu.Item>
+                                    <Menu.Item key="8" onClick={this.selectList.bind(this, 8)}>快递点管理</Menu.Item>
+                                    <Menu.Item key="9" onClick={this.selectList.bind(this, 9)}>送货方式管理</Menu.Item>
+                                    <Menu.Item key="10" onClick={this.selectList.bind(this, 10)}>目的地管理</Menu.Item>
+                                    <Menu.Item key="11" onClick={this.selectList.bind(this, 11)}>快递质量规则管理</Menu.Item>
                                 </SubMenu>
                                 <SubMenu key="sub5" title={<span><Icon type="user"/>账号管理</span>}>
                                     <Menu.Item key="6" onClick={this.selectList.bind(this, 6)}>我的信息</Menu.Item>

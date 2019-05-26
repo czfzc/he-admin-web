@@ -71,6 +71,15 @@ export class Order extends React.Component {
         }).catch((error) => {
             message.error('网络错误')
         })
+
+        //获取服务
+        axios(global.data.host+'/admin/get_service', {
+            session_key: this.state.session_key
+        }).then((res) => {
+            global.data.service=res.data
+        }).catch((error) => {
+            message.error('网络错误')
+        })
     }
 
     getData() {
@@ -100,7 +109,7 @@ export class Order extends React.Component {
 
     handleChange=(pagination, filters, sorter) => {
         this.state.pagination=pagination;
-        if(this.state.searchValue!='')
+        if(this.state.searchValue!=='')
             this.searchData()
         else this.getData();
     }
@@ -156,7 +165,7 @@ export class Order extends React.Component {
 
     searchData(){
         this.setState({loading:true})
-        if(this.state.dataIndex=='orderId'){
+        if(this.state.dataIndex==='orderId'){
             axios(global.data.host+'/admin/search_order_by_order_id', {
                 session_key: this.state.session_key,
                 value:this.state.searchValue,
@@ -174,7 +183,7 @@ export class Order extends React.Component {
             }).catch((error) => {
                 message.error('网络错误')
             })
-        }else if(this.state.dataIndex=='userId'){
+        }else if(this.state.dataIndex==='userId'){
             axios(global.data.host+'/admin/search_order_by_user_id', {
                 session_key: this.state.session_key,
                 value:this.state.searchValue,
@@ -238,7 +247,7 @@ export class Order extends React.Component {
         render: (text) => (
             <Highlighter
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                searchWords={[dataIndex==this.state.dataIndex?this.state.searchValue:'']}
+                searchWords={[dataIndex===this.state.dataIndex?this.state.searchValue:'']}
                 style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
                 autoEscape
                 textToHighlight={text.toString()}
@@ -309,6 +318,8 @@ export class Order extends React.Component {
                     return '已退款'
                 if (record.payed === 3)
                     return '已申请退款'
+                if (record.payed === 3)
+                    return '已被拒绝退款'
             }
         }, {
             title: '状态',

@@ -38,7 +38,7 @@ export class Express extends React.Component {
     getData() {
         this.setState({loading: true})
 
-        if (this.state.ExpressPointNavCurrent == 'all') {
+        if (this.state.ExpressPointNavCurrent === 'all') {
             //获取快递
             axios(global.data.host + '/admin/get_express', {
                 session_key: this.state.session_key,
@@ -94,7 +94,7 @@ export class Express extends React.Component {
     getExpressPointNameByExpressPointId(expressPointId) {
         let point = this.state.expressPoint;
         for (let i = 0; i < point.length; i++) {
-            if (point[i].expressPointId == expressPointId)
+            if (point[i].expressPointId === expressPointId)
                 return point[i].name;
         }
         return '未知'
@@ -103,7 +103,7 @@ export class Express extends React.Component {
     getExpressSizeNameBySizeId(sizeId) {
         let size = this.state.expressSize;
         for (let i = 0; i < size.length; i++) {
-            if (size[i].sizeId == sizeId)
+            if (size[i].sizeId === sizeId)
                 return size[i].sizeName;
         }
         return '未知'
@@ -112,7 +112,7 @@ export class Express extends React.Component {
     handleChange = (pagination, filters, sorter) => {
         this.state.pagination = pagination;
         this.setState({loading: true})
-        if (this.state.searchValue != '')
+        if (this.state.searchValue !== '')
             this.searchData()
         else this.getData()
         this.setState({loading: false})
@@ -196,7 +196,7 @@ export class Express extends React.Component {
             <Highlighter
                 style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
                 highlightStyle={{backgroundColor: '#ffc069', padding: 0}}
-                searchWords={[dataIndex == this.state.dataIndex ? this.state.searchValue : '']}
+                searchWords={[dataIndex === this.state.dataIndex ? this.state.searchValue : '']}
                 autoEscape
                 textToHighlight={text.toString()}
             />
@@ -205,7 +205,7 @@ export class Express extends React.Component {
 
     searchData() {
         this.setState({loading: true})
-        if (this.state.dataIndex == 'expressId') {
+        if (this.state.dataIndex === 'expressId') {
             axios(global.data.host + '/admin/search_express_by_express_id', {
                 session_key: this.state.session_key,
                 value: this.state.searchValue,
@@ -223,7 +223,7 @@ export class Express extends React.Component {
             }).catch((error) => {
                 message.error('网络错误')
             })
-        } else if (this.state.dataIndex == 'userId') {
+        } else if (this.state.dataIndex === 'userId') {
             axios(global.data.host + '/admin/search_express_by_user_id', {
                 session_key: this.state.session_key,
                 value: this.state.searchValue,
@@ -265,7 +265,7 @@ export class Express extends React.Component {
     }
 
     handleExpressPointNavClick = (e) => {
-        if (e.key != this.state.ExpressPointNavCurrent) {
+        if (e.key !== this.state.ExpressPointNavCurrent) {
             this.state.ExpressPointNavCurrent = e.key;
             this.state.pagination.current = 1;
             this.getData()
@@ -384,11 +384,11 @@ export class Express extends React.Component {
             width:100,
             key: '11',
             render: (text, record) => {
-                if (record.status == 0)
+                if (record.status === 0)
                     return '未领取'
-                else if (record.status == 1)
+                else if (record.status === 1)
                     return '已领取'
-                else if (record.status == 2)
+                else if (record.status === 2)
                     return '已送达'
                 else return '未知'
             }

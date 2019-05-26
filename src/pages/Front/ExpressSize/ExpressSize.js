@@ -3,7 +3,6 @@ import {
     Table, Input, InputNumber, Popconfirm, Form, message, Select, Icon, Divider, Button
 } from 'antd'
 import axios from "../../../common/axios";
-import './ExpressPrice.css'
 import "../../../config"
 
 const FormItem = Form.Item;
@@ -12,41 +11,41 @@ const Option = Select.Option;
 
 class SelectList extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
-    listData(){
-        const id=this.props.id
-        if(id==='destBuildingId'){
-            return global.data.building.map((item)=>{
-                return <Option key={item.id} value={item.id}>{item.name}</Option>
+    listData() {
+        const id = this.props.id
+        if (id === "abled") {
+            let able = [
+                {
+                    key: 1,
+                    value: 1,
+                    content: '可用'
+                },
+                {
+                    key: 0,
+                    value: 0,
+                    content: '不可用'
+                }
+            ]
+            return able.map((item) => {
+                return <Option key={item.key} value={item.value}>{item.content}</Option>
             })
-        }else if(id==="expressPointId"){
-            return global.data.expressPoint.map((item)=>{
-                return <Option key={item.expressPointId} value={item.expressPointId}>{item.name}</Option>
-            })
-        }else if(id==="sizeId"){
-            return global.data.expressSize.map((item)=>{
-                return <Option key={item.sizeId} value={item.sizeId}>{item.sizeName}</Option>
-            })
-        }else if(id==="sendMethodId"){
-            return global.data.expressSendMethod.map((item)=>{
-                return <Option key={item.id} value={item.id}>{item.value}</Option>
-            })
+
         }
     }
 
 
-
     render() {
 
-        let value=global.data.getValueById(this.props.id,this.props.value)
+        let value = global.data.getValueById(this.props.id, this.props.value)
 
         return (
             <Select
                 defaultValue={value}
-                style={{ width: 120 }}
+                style={{width: 120}}
                 notFoundContent="请选择"
                 onChange={this.props.onChange}
                 dropdownRender={menu => (
@@ -61,20 +60,13 @@ class SelectList extends React.Component {
     }
 
 }
+
 class EditableCell extends React.Component {
 
     getInput = () => {
-        if (this.props.dataIndex === 'destBuildingId') {
+        if (this.props.dataIndex === 'abled') {
             return <SelectList/>;
-        }else if (this.props.dataIndex === 'expressPointId') {
-            return <SelectList/>;
-        }else if (this.props.dataIndex === 'price') {
-            return <InputNumber/>;
-        }else if (this.props.dataIndex === 'sizeId') {
-            return <SelectList/>;
-        }else if (this.props.dataIndex === 'sendMethodId') {
-            return <SelectList/>;
-        }else return <Input/>;
+        } else return <Input/>;
     };
 
     render() {
@@ -117,66 +109,34 @@ class EditableTable extends React.Component {
     state = {
         editingKey: '',
         listData: [],
-        pagination : global.data.pagination,
         loading: false
     }
 
     constructor(props) {
         super(props);
-        this.handleChange=this.handleChange.bind(this)
-        this.handleAdd=this.handleAdd.bind(this)
+        this.handleAdd = this.handleAdd.bind(this)
         this.columns = [
             {
-                title: '目的地',
-                dataIndex: 'destBuildingId',
+                title: '规格名称',
+                dataIndex: 'sizeName',
                 editable: true,
                 inputType: 'text',
-                key: '1',
-                render:(text,record)=>{
-                    return global.data.getValueById('destBuildingId',text)
-                }
+                key: '1'
             },
             {
-                title: '快递点',
-                dataIndex: 'expressPointId',
+                title: '是否可用',
+                dataIndex: 'abled',
                 editable: true,
                 inputType: 'text',
                 key: '2',
-                render:(text,record)=>{
-                    return global.data.getValueById('expressPointId',text)
-                }
-            },
-            {
-                title: '价格',
-                dataIndex: 'price',
-                editable: true,
-                inputType: 'number',
-                key: '3'
-            },
-            {
-                title: '大小',
-                dataIndex: 'sizeId',
-                editable: true,
-                inputType: 'text',
-                key: '4',
-                render:(text,record)=>{
-                    return global.data.getValueById('sizeId',text)
-                }
-            },
-            {
-                title: '送货方式',
-                dataIndex: 'sendMethodId',
-                editable: true,
-                inputType: 'text',
-                key: '5',
-                render:(text,record)=>{
-                    return global.data.getValueById('sendMethodId',text)
+                render: (text, record) => {
+                    return text ? '可用' : '不可用'
                 }
             },
             {
                 title: '操作',
                 dataIndex: 'operation',
-                key: '6',
+                key: '3',
                 render: (text, record) => {
                     const {editingKey} = this.state;
                     const editable = this.isEditing(record);
@@ -188,7 +148,7 @@ class EditableTable extends React.Component {
                     {form => (
                         <a
                             href="javascript:;"
-                            onClick={() => this.save(form, record.mainkey)}
+                            onClick={() => this.save(form, record.sizeId)}
                             style={{marginRight: 8}}
                         >
                             保存
@@ -197,14 +157,14 @@ class EditableTable extends React.Component {
                   </EditableContext.Consumer>
                   <Popconfirm
                       title="确定取消"
-                      onConfirm={() => this.cancel(record.mainkey)}
+                      onConfirm={() => this.cancel(record.sizeId)}
                       okText="确定" cancelText="取消"
                   >
                     <a>取消</a>
                   </Popconfirm>
                 </span>
                             ) : (
-                                <a disabled={editingKey !== ''} onClick={() => this.edit(record.mainkey)}>修改</a>
+                                <a disabled={editingKey !== ''} onClick={() => this.edit(record.sizeId)}>修改</a>
                             )}
                         </div>
                     );
@@ -217,38 +177,33 @@ class EditableTable extends React.Component {
         this.getData()
     }
 
-    handleAdd(){
-        let listData=this.state.listData.slice()
+    handleAdd() {
+        let listData = this.state.listData.slice()
         console.log(listData)
-        for(let i=0;i<listData.length;i++){
-            if(listData[i].newAdd==true)
+        for (let i = 0; i < listData.length; i++) {
+            if (listData[i].newAdd == true)
                 return;
         }
-        let key=1000;
-        listData.push(    {
-            mainkey: key,
-            destBuildingId: "",
-            expressPointId: "",
-            price: "",
-            sizeId: "",
-            sendMethodId: "",
-            newAdd:true
+        let key = '000000';
+        listData.push({
+            sizeId: key,
+            sizeName:'',
+            abled: true,
+            newAdd: true
         })
         this.setState({
-            listData:listData
+            listData: listData
         })
         this.edit(key)
     }
 
     getData() {
         this.setState({loading: true})
-        axios(global.data.host + '/admin/get_express_price', {
+        axios(global.data.host + '/admin/get_express_size', {
             session_key: global.data.session_key,
-            page: this.state.pagination.current - 1,
-            size: this.state.pagination.pageSize
         }).then((res) => {
             this.setState({
-                listData: res.data.content,
+                listData: res.data,
             })
         }).catch((error) => {
             message.error('网络错误')
@@ -256,22 +211,22 @@ class EditableTable extends React.Component {
         this.setState({loading: false})
     }
 
-    isEditing = record => record.mainkey === this.state.editingKey;
+    isEditing = record =>record.sizeId === this.state.editingKey;
 
     cancel = () => {
-        if(this.checkNew(this.state.editingKey)){
+        if (this.checkNew(this.state.editingKey)) {
             this.setState({
-                listData:this.state.listData.filter((item)=>{
-                    return item.newAdd!==true
+                listData: this.state.listData.filter((item) => {
+                    return item.newAdd !== true
                 }),
-                editingKey:''
+                editingKey: ''
             })
-        }else this.setState({editingKey: ''});
+        } else this.setState({editingKey: ''});
     }
 
-    checkNew=(key)=>{
-        for(let i=0;i<this.state.listData.length;i++)
-            if(this.state.listData[i].mainkey===key&&this.state.listData[i].newAdd===true)
+    checkNew = (key) => {
+        for (let i = 0; i < this.state.listData.length; i++)
+            if (this.state.listData[i].sizeId === key && this.state.listData[i].newAdd === true)
                 return true
         return false
     }
@@ -281,14 +236,11 @@ class EditableTable extends React.Component {
             if (error) {
                 return;
             }
-            if(this.checkNew(key)){
-                axios(global.data.host + '/admin/add_express_price', {
+            if (this.checkNew(this.state.editingKey)) {
+                axios(global.data.host + '/admin/add_express_size', {
                     session_key: global.data.session_key,
-                    dest_building_id: row.destBuildingId,
-                    size_id: row.sizeId,
-                    express_point_id: row.expressPointId,
-                    price: row.price,
-                    send_method_id: row.sendMethodId
+                    size_name:row.sizeName,
+                    abled: row.abled? true:false
                 }).then((res) => {
                     if (res.data.status) {
                         this.getData()
@@ -298,15 +250,12 @@ class EditableTable extends React.Component {
                     message.error('网络错误')
                     return;
                 })
-            }else {
-                axios(global.data.host + '/admin/edit_express_price', {
+            } else {
+                axios(global.data.host + '/admin/edit_express_size', {
                     session_key: global.data.session_key,
-                    mainkey: key,
-                    dest_building_id: row.destBuildingId,
-                    size_id: row.sizeId,
-                    express_point_id: row.expressPointId,
-                    price: row.price,
-                    send_method_id: row.sendMethodId
+                    size_id:this.state.editingKey,
+                    size_name:row.sizeName,
+                    abled: row.abled?  true:false
                 }).then((res) => {
                     if (res.data.status) {
                         this.getData()
@@ -324,13 +273,6 @@ class EditableTable extends React.Component {
     edit(key) {
         console.log(key)
         this.setState({editingKey: key});
-    }
-
-
-    handleChange=(pagination, filters, sorter) => {
-        this.state.pagination=pagination;
-        this.cancel()
-        this.getData();
     }
 
     render() {
@@ -358,8 +300,8 @@ class EditableTable extends React.Component {
 
         return (
             <EditableContext.Provider value={this.props.form}>
-                <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                    添加计费方式
+                <Button onClick={this.handleAdd} type="primary" style={{marginBottom: 16}}>
+                    添加快递规格
                 </Button>
                 <Table
                     components={components}
@@ -367,13 +309,12 @@ class EditableTable extends React.Component {
                     dataSource={this.state.listData}
                     columns={columns}
                     rowClassName="editable-row"
-                    onChange={this.handleChange}
-                    pagination={this.state.pagination}
-                    rowKey={record => record.mainkey}
+                    pagination={false}
+                    rowKey={record => record.sizeId}
                 />
             </EditableContext.Provider>
         );
     }
 }
 
-export const ExpressPrice = Form.create()(EditableTable);
+export const ExpressSize = Form.create()(EditableTable);

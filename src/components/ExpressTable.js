@@ -1,8 +1,7 @@
 import React from 'react';
-import {message, Table, Popconfirm, Input, Button, Icon, Menu} from 'antd';
+import {message, Table, Popconfirm, Menu} from 'antd';
 import axios from "../common/axios";
 import "../config"
-import Highlighter from 'react-highlight-words'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -34,7 +33,7 @@ export default class ExpressTable extends React.Component {
     getExpressPointNameByExpressPointId(expressPointId){
         let point=this.state.expressPoint;
         for(let i=0;i<point.length;i++){
-            if(point[i].expressPointId==expressPointId)
+            if(point[i].expressPointId===expressPointId)
                 return point[i].name;
         }
         return '未知'
@@ -43,7 +42,7 @@ export default class ExpressTable extends React.Component {
     getExpressSizeNameBySizeId(sizeId){
         let size=this.state.expressSize;
         for(let i=0;i<size.length;i++){
-            if(size[i].sizeId==sizeId)
+            if(size[i].sizeId===sizeId)
                 return size[i].sizeName;
         }
         return '未知'
@@ -141,11 +140,11 @@ export default class ExpressTable extends React.Component {
             dataIndex: 'status',
             key: '10',
             render:(text,record)=>{
-                if(record.status==0)
+                if(record.status===0)
                     return '未领取'
-                else if(record.status==1)
+                else if(record.status===1)
                     return '已领取'
-                else if(record.status==2)
+                else if(record.status===2)
                     return '已送达'
                 else return '未知'
             }
