@@ -10,7 +10,8 @@ export class ExpressPreorder extends React.Component {
     state = {
         loading: false,
         session_key : global.data.session_key,
-        pagination : global.data.pagination
+        pagination : global.data.pagination,
+        searchValue:''
     }
 
     constructor(props) {

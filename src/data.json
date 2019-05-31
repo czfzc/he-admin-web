@@ -211,3 +211,62 @@
     "position": "2,3"
   }
 ]
+
+{
+  "mysession": "2fcaeb6cd46ffe5e1d63dcd4e3d7ece4",
+  "preorders": [
+    {
+      "service_id": 1,
+      "express": [
+        {
+          "express_point_id": "111122",
+          "address_id": "ff8081816ae8ebbb016ae9b10ff90000",
+          "size_id": "0",
+          "send_method_id": "2",
+          "discount": "express_card"
+        },
+        {
+          "express_point_id": "111122",
+          "address_id": "ff8081816ae8ebbb016ae9b10ff90000",
+          "size_id": "1",
+          "send_method_id": "2",
+          "discount": "express_card"
+        },
+        {
+          "express_point_id": "111122",
+          "address_id": "ff8081816ae8ebbb016ae9b10ff90000",
+          "size_id": "1",
+          "send_method_id": "2",
+          "discount": "voucher"
+        },
+        {
+          "express_point_id": "111122",
+          "address_id": "ff8081816ae8ebbb016ae9b10ff90000",
+          "size_id": "1",
+          "send_method_id": "2",
+          "discount": ""
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "address": "三舍C区544",
+  "sender_admin_id": "17709201921",
+ // "express_point": "近邻宝",
+  "abled": true,
+  "send_method": "18:00左右送达",
+ // "size_name": "小",
+ // "express_id": "ff8081816b022807016b035614cc0006",
+ // "receive_code": "23432",
+//  "user_id": "17709201921",
+  "sms_content": "",
+  "total_fee": 0,
+ // "name": "曹子帆",
+ // "phone_num": "17709201921",
+  "preorder_id": "ff8081816b022807016b035614c30005",
+  "time": "2019-05-29T19:25:02.000+0800",
+  "payed": true,
+  "status": 2
+}

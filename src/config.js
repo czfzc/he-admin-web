@@ -1,5 +1,5 @@
 global.data = {
-    host:'http://shop.xalingyu.cn',
+    host:'http://127.0.0.1:8081',
     session_key:'',
     expressPoint:[],
     expressSize:[],

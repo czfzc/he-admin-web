@@ -337,10 +337,10 @@ export class Order extends React.Component {
             render: (text, record) => {
                 return (
                     <div>
-                        <Popconfirm title="确定退款？"
+                        {record.payed===1?<Popconfirm title="确定退款？"
                                     onConfirm={this.refund.bind(this,record.orderId)} okText="Yes" cancelText="No">
                             <a>退款</a>/
-                        </Popconfirm>
+                        </Popconfirm>:null}
                         {record.abled?
                             <Popconfirm title="确定冻结?"
                                         onConfirm={this.disable.bind(this,record.orderId)} okText="Yes" cancelText="No">
