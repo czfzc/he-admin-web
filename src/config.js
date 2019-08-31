@@ -5,6 +5,7 @@ global.data = {
     expressSize:[],
     building:[],
     expressSendMethod:[],
+    productSendMethod:[],
     service:[],
     pagination:{
         current:1,
@@ -37,8 +38,46 @@ global.data = {
                 if(global.data.service[i].id===parseInt(id))
                     return global.data.service[i].name
             }
+        }else if(dataIndex==='sendMethodIdProduct'){
+            for(let i=0;i<global.data.productSendMethod.length;i++){
+                if(global.data.productSendMethod[i].id===id)
+                    return global.data.productSendMethod[i].value
+            }
         }else if(dataIndex==='abled'){
             return id?'可用':'不可用'
         }
+    }
+    ,deepClone(obj) {
+        var copy
+
+        // 处理3种基础类型，和null、undefined
+        if (obj === null || typeof obj !== 'object') return obj
+
+        // 处理日期
+        if (obj instanceof Date) {
+            copy = new Date()
+            copy.setTime(obj.getTime())
+            return copy
+        }
+
+        // 处理数组
+        if (Array instanceof Array) {
+            copy = []
+            for (var i = 0, len = obj.length; i < len; i++) {
+                copy[i] = this.deepClone(obj[i])
+            }
+            return copy
+        }
+
+        // 处理对象
+        if (obj instanceof Object) {
+            copy = {}
+            for (var attr in obj) {
+                if (obj.hasOwnProperty(attr)) copy[attr] = this.deepClone(obj[attr])
+            }
+            return copy
+        }
+
+        throw new Error("Unable to copy obj as type isn't suported" + obj.constructor.name)
     }
 };

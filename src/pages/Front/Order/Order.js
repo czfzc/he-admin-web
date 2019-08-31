@@ -18,8 +18,6 @@ export class Order extends React.Component {
     constructor(props) {
         super(props)
 
-
-
         this.handleChange=this.handleChange.bind(this)
         this.refund=this.refund.bind(this)
         this.disable=this.disable.bind(this)
@@ -29,58 +27,8 @@ export class Order extends React.Component {
 
     componentDidMount() {
         this.getData()
-        this.getExpressData()
     }
 
-    /**
-     * 获取快递点数据和快递大小数据
-     */
-    getExpressData(){
-        //获取快递点
-        axios(global.data.host+'/admin/get_express_point', {
-            session_key: this.state.session_key
-        }).then((res) => {
-            global.data.expressPoint=res.data
-        }).catch((error) => {
-            message.error('网络错误')
-        })
-
-        //获取快递大小
-        axios(global.data.host+'/admin/get_express_size', {
-            session_key: this.state.session_key
-        }).then((res) => {
-            global.data.expressSize=res.data
-        }).catch((error) => {
-            message.error('网络错误')
-        })
-
-        //获取快递大小
-        axios(global.data.host+'/admin/get_building', {
-            session_key: this.state.session_key
-        }).then((res) => {
-            global.data.building=res.data
-        }).catch((error) => {
-            message.error('网络错误')
-        })
-
-        //获取送货方式
-        axios(global.data.host+'/admin/get_send_method', {
-            session_key: this.state.session_key
-        }).then((res) => {
-            global.data.expressSendMethod=res.data
-        }).catch((error) => {
-            message.error('网络错误')
-        })
-
-        //获取服务
-        axios(global.data.host+'/admin/get_service', {
-            session_key: this.state.session_key
-        }).then((res) => {
-            global.data.service=res.data
-        }).catch((error) => {
-            message.error('网络错误')
-        })
-    }
 
     getData() {
         this.setState({loading: true})

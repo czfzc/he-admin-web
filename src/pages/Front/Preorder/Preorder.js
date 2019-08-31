@@ -1,11 +1,12 @@
 import React from 'react';
-import {message, Table, Popconfirm, Input, Button, Icon} from 'antd';
+import {message, Table, Input, Button, Icon} from 'antd';
 import axios from "../../../common/axios";
 import "../../../config"
 import Highlighter from 'react-highlight-words'
 import ExpressTable from "../../../components/ExpressTable";
+import ProductTable from "../../../components/ProductTable";
 
-export class ExpressPreorder extends React.Component {
+export class Preorder extends React.Component {
 
     state = {
         loading: false,
@@ -26,7 +27,7 @@ export class ExpressPreorder extends React.Component {
 
     getData() {
         this.setState({loading: true})
-        axios(global.data.host+'/admin/get_express_preorder', {
+        axios(global.data.host+'/admin/get_preorder', {
             session_key: this.state.session_key,
             page: this.state.pagination.current - 1,
             size: this.state.pagination.pageSize
@@ -170,8 +171,11 @@ export class ExpressPreorder extends React.Component {
         });
     }
 
-    expressRender=(record, index, indent, expanded)=>{
-        return <ExpressTable listData={record.express}/>
+    subRender=(record, index, indent, expanded)=>{
+        if(record.serviceId == 1)
+            return <ExpressTable listData={record.express}/>
+        else if(record.serviceId == 2)
+            return <ProductTable listData={record.userProduct}/>
     }
 
 
@@ -227,7 +231,8 @@ export class ExpressPreorder extends React.Component {
             width:100,
             key: '7',
             render: (text, record) => {
-                return '快递代取'
+                return global.data.getValueById("serviceId",record.serviceId)
+
             }
         }]
         return (
@@ -239,7 +244,7 @@ export class ExpressPreorder extends React.Component {
                    rowKey={record => record.id}
                    scroll={{ x: 700 }}
                    bordered
-                   expandedRowRender={this.expressRender}/>
+                   expandedRowRender={this.subRender}/>
         )
     }
 

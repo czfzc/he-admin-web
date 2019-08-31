@@ -28,27 +28,6 @@ export default class ExpressTable extends React.Component {
 
     }
 
-
-
-    getExpressPointNameByExpressPointId(expressPointId){
-        let point=this.state.expressPoint;
-        for(let i=0;i<point.length;i++){
-            if(point[i].expressPointId===expressPointId)
-                return point[i].name;
-        }
-        return '未知'
-    }
-
-    getExpressSizeNameBySizeId(sizeId){
-        let size=this.state.expressSize;
-        for(let i=0;i<size.length;i++){
-            if(size[i].sizeId===sizeId)
-                return size[i].sizeName;
-        }
-        return '未知'
-    }
-
-
     withdraw(id){
         axios(global.data.host+'/admin/set_status_to_withdraw', {
             session_key: this.state.session_key,
@@ -114,14 +93,14 @@ export default class ExpressTable extends React.Component {
             dataIndex: 'expressPointId',
             key: '5',
             render:(text,record)=>{
-                return this.getExpressPointNameByExpressPointId(record.expressPointId)
+                return global.data.getValueById("expressPointId",record.expressPointId)
             }
         },{
             title: '快递大小',
             dataIndex: 'sizeId',
             key: '6',
             render:(text,record)=>{
-                return this.getExpressSizeNameBySizeId(record.sizeId)
+                return global.data.getValueById("sizeId",record.sizeId)
             }
         },{
             title: '单价',
