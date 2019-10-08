@@ -1,187 +1,127 @@
-import { Table, Input, InputNumber, Popconfirm, Form } from 'antd';
-
-const data = [];
-for (let i = 0; i < 100; i++) {
-    data.push({
-        key: i.toString(),
-        name: `Edrward ${i}`,
-        age: 32,
-        address: `London Park no. ${i}`,
-    });
-}
-const FormItem = Form.Item;
-const EditableContext = React.createContext();
-
-class EditableCell extends React.Component {
-    getInput = () => {
-        if (this.props.inputType === 'number') {
-            return <InputNumber />;
+{
+    "content"
+:
+    [{
+        "id": "2c9080846d8c6fcf016d9f415946004a",
+        "totalFee": 0.05,
+        "time": "19-10-06 12:08:43",
+        "orderId": "2c9080846d8c6fcf016d9f4159430049",
+        "userId": "17709201921",
+        "serviceId": 2,
+        "status": 0,
+        "payed": 1,
+        "abled": true,
+        "sendMethodId": "5",
+        "express": null,
+        "userProduct": [{
+            "mainKey": "2c9080846d8c6fcf016d9f415948004b",
+            "preorderId": "2c9080846d8c6fcf016d9f415946004a",
+            "productId": "ff8081816cbf0e39016cbf0e80c70000",
+            "num": 1,
+            "totalFee": 0.03,
+            "userid": "17709201921",
+            "time": "2019-10-06 12:08:43",
+            "product": {
+                "id": "ff8081816cbf0e39016cbf0e80c70000",
+                "name": "奥利奥",
+                "price": 0.03,
+                "abled": true,
+                "rest": 10,
+                "typeId": "989",
+                "imgLink": "https://www.baidu.com/img/bd_logo.png",
+                "addition": "暂无添加",
+                "time": "2019-10-07 18:11:34"
+            },
+            "name": ""
+        }, {
+            "mainKey": "2c9080846d8c6fcf016d9f415949004c",
+            "preorderId": "2c9080846d8c6fcf016d9f415946004a",
+            "productId": "ff8081816cbf0e39016cbf0e80c70001",
+            "num": 1,
+            "totalFee": 0.02,
+            "userid": "17709201921",
+            "time": "2019-10-06 12:08:43",
+            "product": {
+                "id": "ff8081816cbf0e39016cbf0e80c70001",
+                "name": "巧乐兹",
+                "price": 0.02,
+                "abled": true,
+                "rest": 20,
+                "typeId": "989",
+                "imgLink": "https://www.baidu.com/img/bd_logo.png",
+                "addition": "暂无添加",
+                "time": "2019-10-07 18:11:35"
+            },
+            "name": ""
+        }],
+        "address": {
+            "id": "2c9080846b3f8737016b44d94aca0023",
+            "userId": "17709201921",
+            "name": "傻逼",
+            "phoneNum": "17709201921",
+            "roomNum": "446",
+            "buildId": "125",
+            "addition": "undefined",
+            "default": true
+        },
+        "addition": "",
+        "statusData": "0",
+        "extraData": "123"
+    }], "pageable"
+:
+    {
+        "sort"
+    :
+        {
+            "sorted"
+        :
+            true, "unsorted"
+        :
+            false, "empty"
+        :
+            false
         }
-        return <Input />;
-    };
-
-    render() {
-        const { editing, dataIndex, title, inputType, record, index, ...restProps } = this.props;
-        return (
-            <EditableContext.Consumer>
-                {form => {
-                    const { getFieldDecorator } = form;
-                    return (
-                        <td {...restProps}>
-                            {editing ? (
-                                <FormItem style={{ margin: 0 }}>
-                                    {getFieldDecorator(dataIndex, {
-                                        rules: [
-                                            {
-                                                required: true,
-                                                message: `Please Input ${title}!`,
-                                            },
-                                        ],
-                                        initialValue: record[dataIndex],
-                                    })(this.getInput())}
-                                </FormItem>
-                            ) : (
-                                restProps.children
-                            )}
-                        </td>
-                    );
-                }}
-            </EditableContext.Consumer>
-        );
+    ,
+        "pageSize"
+    :
+        20, "pageNumber"
+    :
+        0, "offset"
+    :
+        0, "unpaged"
+    :
+        false, "paged"
+    :
+        true
     }
+,
+    "totalPages"
+:
+    1, "totalElements"
+:
+    1, "last"
+:
+    true, "first"
+:
+    true, "sort"
+:
+    {
+        "sorted"
+    :
+        true, "unsorted"
+    :
+        false, "empty"
+    :
+        false
+    }
+,
+    "numberOfElements"
+:
+    1, "size"
+:
+    20, "number"
+:
+    0, "empty"
+:
+    false
 }
-
-class EditableTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { data, editingKey: '' };
-        this.columns = [
-            {
-                title: 'name',
-                dataIndex: 'name',
-                width: '25%',
-                editable: true,
-            },
-            {
-                title: 'age',
-                dataIndex: 'age',
-                width: '15%',
-                editable: true,
-            },
-            {
-                title: 'address',
-                dataIndex: 'address',
-                width: '40%',
-                editable: true,
-            },
-            {
-                title: 'operation',
-                dataIndex: 'operation',
-                render: (text, record) => {
-                    const { editingKey } = this.state;
-                    const editable = this.isEditing(record);
-                    return (
-                        <div>
-                            {editable ? (
-                                <span>
-                  <EditableContext.Consumer>
-                    {form => (
-                        <a
-                            href="javascript:;"
-                            onClick={() => this.save(form, record.key)}
-                            style={{ marginRight: 8 }}
-                        >
-                            Save
-                        </a>
-                    )}
-                  </EditableContext.Consumer>
-                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                    <a>Cancel</a>
-                  </Popconfirm>
-                </span>
-                            ) : (
-                                <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
-                                    Edit
-                                </a>
-                            )}
-                        </div>
-                    );
-                },
-            },
-        ];
-    }
-
-    isEditing = record => record.key === this.state.editingKey;
-
-    cancel = () => {
-        this.setState({ editingKey: '' });
-    };
-
-    save(form, key) {
-        form.validateFields((error, row) => {
-            if (error) {
-                return;
-            }
-            const newData = [...this.state.data];
-            const index = newData.findIndex(item => key === item.key);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                this.setState({ data: newData, editingKey: '' });
-            } else {
-                newData.push(row);
-                this.setState({ data: newData, editingKey: '' });
-            }
-        });
-    }
-
-    edit(key) {
-        this.setState({ editingKey: key });
-    }
-
-    render() {
-        const components = {
-            body: {
-                cell: EditableCell,
-            },
-        };
-
-        const columns = this.columns.map(col => {
-            if (!col.editable) {
-                return col;
-            }
-            return {
-                ...col,
-                onCell: record => ({
-                    record,
-                    inputType: col.dataIndex === 'age' ? 'number' : 'text',
-                    dataIndex: col.dataIndex,
-                    title: col.title,
-                    editing: this.isEditing(record),
-                }),
-            };
-        });
-
-        return (
-            <EditableContext.Provider value={this.props.form}>
-                <Table
-                    components={components}
-                    bordered
-                    dataSource={this.state.data}
-                    columns={columns}
-                    rowClassName="editable-row"
-                    pagination={{
-                        onChange: this.cancel,
-                    }}
-                />
-            </EditableContext.Provider>
-        );
-    }
-}
-
-const EditableFormTable = Form.create()(EditableTable);
-
-ReactDOM.render(<EditableFormTable />, mountNode);

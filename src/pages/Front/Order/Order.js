@@ -200,7 +200,7 @@ export class Order extends React.Component {
                 autoEscape
                 textToHighlight={text.toString()}
             />
-        ),
+        )
     })
 
 

@@ -6,6 +6,8 @@
     "antd": "^3.16.6",
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.0",
+    "cos-js-sdk-v5": "^0.5.20",
+    "cos-nodejs-sdk-v5": "^2.5.12",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-highlight-words": "^0.16.0",

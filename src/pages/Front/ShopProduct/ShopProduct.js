@@ -1,8 +1,10 @@
 import React from 'react'
-import {message,Menu,Icon,Row,Col,Pagination,Button} from 'antd'
+import {message,Menu,Icon,Row,Col,Pagination,Button,Input} from 'antd'
 import ProductCard from '../../../components/ProductCard'
 import axios from "../../../common/axios";
 import "../../../config"
+
+const {Search} = Input
 
 export default class ShopProduct extends React.Component{
 
@@ -14,11 +16,7 @@ export default class ShopProduct extends React.Component{
         page:1,
         pageSize:20,
         total:0,
-        defaultImg:'https://timgsa.baidu.com/timg?' +
-            'image&quality=80&size=b9999_10000&sec=15' +
-            '67249488846&di=eca5987a51448437b22715aa7b1' +
-            '7309a&imgtype=0&src=http%3A%2F%2Fp2.so.qh' +
-            'imgs1.com%2Ft010147a810cb3c47d2.jpg'
+        defaultImg:null
     }
 
     constructor(props){
@@ -28,6 +26,7 @@ export default class ShopProduct extends React.Component{
         this.setPage = this.setPage.bind(this)
         this.addProduct = this.addProduct.bind(this)
         this.cancelNewAdd = this.cancelNewAdd.bind(this)
+        this.onSearch = this.onSearch.bind(this)
     }
 
     componentDidMount() {
@@ -108,6 +107,28 @@ export default class ShopProduct extends React.Component{
 
     }
 
+    onSearch(e){
+        //获取商品
+        if (e.target.value=='')
+            this.getData(this.state.buildingId)
+
+        axios(global.data.host+'/admin/search_shop_product_by_name', {
+            session_key: this.state.session_key,
+            building_id: this.state.buildingId,
+            page:this.state.page-1,
+            size:this.state.pageSize,
+            value:e.target.value
+        }).then((res) => {
+            this.setState({
+                products:res.data.content,
+                total:res.data.totalElements
+            })
+        }).catch((error) => {
+            message.error('网络错误')
+        })
+
+    }
+
     render() {
 
         return (
@@ -124,7 +145,18 @@ export default class ShopProduct extends React.Component{
                         })
                     }
                 </Menu>
-                <Button type="primary" onClick={this.addProduct} style={{margin:10}}>添加商品</Button>
+                <Row gutter={0} type="flex" style={{marginLeft:12}}>
+                    <Button type="primary" size="large" onClick={this.addProduct} style={{margin:10}}>添加商品</Button>
+                    <Col span={10} style={{marginTop:10}}>
+                        <Search
+                            placeholder="输入商品名"
+                            enterButton="搜索"
+                            size="large"
+                            allowClear
+                            onChange={this.onSearch}
+                        />
+                    </Col>
+                </Row>
                 <Row gutter={0} type="flex">
                     {
                         this.state.products.map((item)=>{
@@ -137,7 +169,7 @@ export default class ShopProduct extends React.Component{
                         })
                     }
                 </Row>
-                <Pagination showQuickJumper defaultCurrent={this.state.page} pageSize={this.state.pageSize} total={500} onChange={this.setPage} />
+                <Pagination showQuickJumper defaultCurrent={this.state.page} pageSize={this.state.pageSize} total={this.state.total} onChange={this.setPage} />
 
             </div>
             )

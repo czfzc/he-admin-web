@@ -1,5 +1,9 @@
+import React from "react";
+import Highlighter from 'react-highlight-words';
+
 global.data = {
-    host:'http://127.0.0.1:8081',
+    host:'https://hour.shaoyixiaoshi.cn',
+    //host:'http://127.0.0.1:8081',
     session_key:'',
     expressPoint:[],
     expressSize:[],
@@ -79,5 +83,12 @@ global.data = {
         }
 
         throw new Error("Unable to copy obj as type isn't suported" + obj.constructor.name)
+    },
+    getTextTruncProps(){
+        return {
+            render: (text) => {
+                return text
+            }
+        }
     }
 };

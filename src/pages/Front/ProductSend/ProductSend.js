@@ -38,6 +38,17 @@ export default class ProductSend extends React.Component{
         }).catch((error) => {
             message.error('网络错误')
         })
+        //获取商品类型
+        axios(global.data.host+'/admin/get_shop_product_type', {
+            session_key: this.state.session_key,
+            building_id: buildingId
+        }).then((res) => {
+            this.setState({
+                productTypes:res.data
+            })
+        }).catch((error) => {
+            message.error('网络错误')
+        })
     }
 
     setSended(id){
@@ -71,14 +82,14 @@ export default class ProductSend extends React.Component{
 
     render() {
         const expandedRowRender = (record, index, indent, expanded) => {
-            return <ProductTable listData={record.userProduct}/>
+            return <ProductTable listData={record.userProduct} buildingId={this.state.buildingId} productTypes={this.state.productTypes}/>
         };
 
         const columns = [
-            { title: '商品预付单号', dataIndex: 'id', key: '1' },
+            { title: '商品预付单号', dataIndex: 'id', key: '1' ,...global.data.getTextTruncProps()},
             { title: '总价', dataIndex: 'totalFee', key: '2' },
             { title: '时间', dataIndex: 'time', key: '3' },
-            { title: '用户id', dataIndex: 'userId', key: '4' },
+            { title: '用户id', dataIndex: 'userId', key: '4' ,...global.data.getTextTruncProps()},
             {
                 title: '状态',
                 dataIndex: 'payed',

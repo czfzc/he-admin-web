@@ -1,7 +1,9 @@
 import React from "react";
 import "../config"
 import axios from "../common/axios"
-import {Card,Input,Icon,Popconfirm,Typography,Select,InputNumber,message} from 'antd'
+import {Card,Input,Icon,Popconfirm,Typography,Select,InputNumber,message,Upload,Button} from 'antd'
+//import COS from 'cos-nodejs-sdk-v5'
+//import fs from 'fs'
 const { Title, Text } = Typography;
 const {TextArea} = Input
 const {Option} = Select
@@ -29,6 +31,7 @@ export default class ProductCard extends React.Component{
         isNew:false,
         getData:function(){},
         cancel:function () {},
+        credentials:{}
     }
 
     constructor(props){
@@ -50,6 +53,7 @@ export default class ProductCard extends React.Component{
         this.handleRest = this.handleRest.bind(this)
         this.handleAbled = this.handleAbled.bind(this)
         this.handleType = this.handleType.bind(this)
+        this.onUpload = this.onUpload.bind(this)
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -101,7 +105,8 @@ export default class ProductCard extends React.Component{
                 price: this.state.productTemp.price,
                 rest: this.state.productTemp.rest,
                 type_id: this.state.productTemp.typeId,
-                img_link: this.state.productTemp.imgLink,
+                img_link: this.state.productTemp.imgLink.startsWith("http")?
+                    this.state.productTemp.imgLink:'http://'+this.state.productTemp.imgLink,
                 abled: this.state.productTemp.abled,
                 addition: this.state.productTemp.addition
             }).then((res) => {
@@ -173,6 +178,59 @@ export default class ProductCard extends React.Component{
         return '未知'
     }
 
+    onUpload(file, fileList) {
+        console.log(file, fileList);
+        let that = this;
+        var COS = require('cos-js-sdk-v5');
+        /*
+        var cos = new COS({
+            // 必选参数
+            getAuthorization: function (options, callback) {
+                axios(global.data.host+'/admin/get_cos_credentials', {
+                    session_key: global.data.session_key,
+                }).then((res) => {
+                    that.state.credentials=res.data.credentials
+                    callback({
+                        TmpSecretId: res.data.credentials.TmpSecretId,
+                        TmpSecretKey: res.data.credentials.TmpSecretKey,
+                        XCosSecurityToken: res.data.credentials.sessionToken,
+                        ExpiredTime: res.data.ExpiredTime, // SDK 在 ExpiredTime 时间前，不会再次调用 getAuthorization
+                    });
+                }).catch((error) => {
+                    console.log(error)
+                    message.error('网络错误')
+                })
+            }
+        });*/
+
+        var cos = new COS({
+            SecretId: 'AKIDowiEMuE4N6YD9upTg8V1CLO0Cp4wnZtX',
+            SecretKey: 'bVZ1rQhUTGPK4UGvB7hjNssYx02b6GwH',
+        });
+
+        cos.putObject({
+            Bucket: 'hourshop-1251745829', /* 必须 */
+            Region: 'ap-beijing',    /* 必须 */
+            Key: 'hour/'+file.name,              /* 必须 */
+            Body: file,
+        }, function(err, data) {
+            console.log(err || data);
+            if(data.statusCode == 200) {
+                that.state.productTemp.imgLink = "http://"+data.Location
+                that.setState({
+                    productTemp: that.state.productTemp
+                })
+            }else{
+                message.error("上传失败");
+            }
+        });
+
+        return false;
+    }
+
+
+
+
     render(){
         return (
             <Card
@@ -180,10 +238,43 @@ export default class ProductCard extends React.Component{
                 hoverable
                 size="small"
                 cover={
-                    <img
-                        alt="example"
-                        src={this.state.product.imgLink}
-                    />
+                        this.state.isChanging?
+                                (typeof(this.state.productTemp.imgLink)=='undefined'?
+                                <Upload beforeUpload={this.onUpload}>
+                                    <img
+                                        style={{
+                                            width:230
+                                        }}
+                                        alt="example"
+                                        src={'https://hourshop-1251745829.cos.ap-beijing.myqcloud.com/hour/add.jpg'}
+                                    />
+                                </Upload>:
+                                <Upload beforeUpload={this.onUpload}>
+                                    <img
+                                        style={{
+                                            width:230
+                                        }}
+                                        alt="example"
+                                        src={this.state.productTemp.imgLink}
+                                    />
+                                </Upload>):
+                            (typeof(this.state.product.imgLink)=='undefined'?
+                                <img
+                                    style={{
+                                        width:230
+                                    }}
+                                    alt="example"
+                                    src={'https://hourshop-1251745829.cos.ap-beijing.myqcloud.com/hour/add.jpg'}
+                                />:
+                                <img
+                                    style={{
+                                        width:230
+                                    }}
+                                    alt="example"
+                                    src={this.state.product.imgLink}
+                                />
+                            )
+
                 }
                 actions={[
                     (this.state.isChanging ?
@@ -204,7 +295,7 @@ export default class ProductCard extends React.Component{
                 <div style={{ marginBottom: 16 }}>
                     名称：
                     {this.state.isChanging?
-                        <Input defaultValue={this.state.productTemp.name} onChange={this.handleName} />
+                        <Input defaultValue={this.state.productTemp.name} onChange={this.handleName} style={{width:160}}/>
                         :
                         <Text>{this.state.product.name}</Text>
                     }
@@ -231,7 +322,8 @@ export default class ProductCard extends React.Component{
                     {this.state.isChanging?
                         <Select
                             labelInValue
-                            defaultValue={{ key: this.state.productTemp.typeId }}
+                            defaultValue={{ key: this.state.productTemp.typeId!=''?
+                                    this.state.productTemp.typeId:this.state.productTypes[0].id }}
                             style={{ width: 120 }}
                             onChange={this.handleType}
                             >
