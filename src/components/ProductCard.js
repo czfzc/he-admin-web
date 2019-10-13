@@ -182,7 +182,7 @@ export default class ProductCard extends React.Component{
         console.log(file, fileList);
         let that = this;
         var COS = require('cos-js-sdk-v5');
-        /*
+
         var cos = new COS({
             // 必选参数
             getAuthorization: function (options, callback) {
@@ -191,21 +191,16 @@ export default class ProductCard extends React.Component{
                 }).then((res) => {
                     that.state.credentials=res.data.credentials
                     callback({
-                        TmpSecretId: res.data.credentials.TmpSecretId,
-                        TmpSecretKey: res.data.credentials.TmpSecretKey,
+                        TmpSecretId: res.data.credentials.tmpSecretId,
+                        TmpSecretKey: res.data.credentials.tmpSecretKey,
                         XCosSecurityToken: res.data.credentials.sessionToken,
-                        ExpiredTime: res.data.ExpiredTime, // SDK 在 ExpiredTime 时间前，不会再次调用 getAuthorization
+                        ExpiredTime: res.data.expiredTime, // SDK 在 ExpiredTime 时间前，不会再次调用 getAuthorization
                     });
                 }).catch((error) => {
                     console.log(error)
                     message.error('网络错误')
                 })
             }
-        });*/
-
-        var cos = new COS({
-            SecretId: 'AKIDowiEMuE4N6YD9upTg8V1CLO0Cp4wnZtX',
-            SecretKey: 'bVZ1rQhUTGPK4UGvB7hjNssYx02b6GwH',
         });
 
         cos.putObject({

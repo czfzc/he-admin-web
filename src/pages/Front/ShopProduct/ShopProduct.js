@@ -1,5 +1,5 @@
 import React from 'react'
-import {message,Menu,Icon,Row,Col,Pagination,Button,Input} from 'antd'
+import {message,Menu,Icon,Row,Col,Pagination,Button,Input,Empty} from 'antd'
 import ProductCard from '../../../components/ProductCard'
 import axios from "../../../common/axios";
 import "../../../config"
@@ -16,7 +16,8 @@ export default class ShopProduct extends React.Component{
         page:1,
         pageSize:20,
         total:0,
-        defaultImg:null
+        defaultImg:null,
+        searchValue:''
     }
 
     constructor(props){
@@ -107,26 +108,29 @@ export default class ShopProduct extends React.Component{
 
     }
 
-    onSearch(e){
+    onSearchChange(e){
         //获取商品
-        if (e.target.value=='')
-            this.getData(this.state.buildingId)
+        this.onSearch(e.target.value)
+    }
 
+    onSearch(value){
+        if (value=='')
+            this.getData(this.state.buildingId)
         axios(global.data.host+'/admin/search_shop_product_by_name', {
             session_key: this.state.session_key,
             building_id: this.state.buildingId,
             page:this.state.page-1,
             size:this.state.pageSize,
-            value:e.target.value
+            value:value
         }).then((res) => {
             this.setState({
                 products:res.data.content,
-                total:res.data.totalElements
+                total:res.data.totalElements,
+                searchValue:value
             })
         }).catch((error) => {
             message.error('网络错误')
         })
-
     }
 
     render() {
@@ -145,31 +149,53 @@ export default class ShopProduct extends React.Component{
                         })
                     }
                 </Menu>
-                <Row gutter={0} type="flex" style={{marginLeft:12}}>
-                    <Button type="primary" size="large" onClick={this.addProduct} style={{margin:10}}>添加商品</Button>
-                    <Col span={10} style={{marginTop:10}}>
-                        <Search
-                            placeholder="输入商品名"
-                            enterButton="搜索"
-                            size="large"
-                            allowClear
-                            onChange={this.onSearch}
-                        />
-                    </Col>
-                </Row>
-                <Row gutter={0} type="flex">
-                    {
-                        this.state.products.map((item)=>{
-                            return(
-                                <Col span={6} key={item.id}>
-                                    <ProductCard product={item} productTypes={this.state.productTypes} buildingId={this.state.buildingId}
-                                        getData={this.getData} isChanging={item.isChanging} isNew={item.isNew} cancel={this.cancelNewAdd}/>
+
+                {
+                    this.state.products.length==0&&this.state.searchValue==''?
+                        <Empty
+                            image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                            imageStyle={{
+                                height: 60,
+                            }}
+                            description={
+                                <span>
+                                当前楼暂无商品哦
+                              </span>
+                                                    }
+                                                >
+                             <Button type="primary" onClick={this.addProduct}>添加商品</Button>
+                        </Empty>:
+                        <div>
+                            <Row gutter={0} type="flex" style={{marginLeft:12}}>
+                                <Button type="primary" size="large" onClick={this.addProduct} style={{margin:10}}>添加商品</Button>
+                                <Col span={10} style={{marginTop:10}}>
+                                    <Search
+                                        placeholder="输入商品名"
+                                        enterButton="搜索"
+                                        size="large"
+                                        allowClear
+                                        onChange={this.onSearch}
+                                        onSearch={this.onSearch}
+                                    />
                                 </Col>
-                            )
-                        })
-                    }
-                </Row>
-                <Pagination showQuickJumper defaultCurrent={this.state.page} pageSize={this.state.pageSize} total={this.state.total} onChange={this.setPage} />
+                            </Row>
+                            <Row gutter={0} type="flex">
+                                {
+                                    this.state.products.map((item)=>{
+                                        return(
+                                            <Col span={6} key={item.id}>
+                                                <ProductCard product={item} productTypes={this.state.productTypes} buildingId={this.state.buildingId}
+                                                             getData={this.getData} isChanging={item.isChanging} isNew={item.isNew} cancel={this.cancelNewAdd}/>
+                                            </Col>
+                                        )
+                                    })
+                                }
+                            </Row>
+                            <Pagination showQuickJumper defaultCurrent={this.state.page} pageSize={this.state.pageSize} total={this.state.total} onChange={this.setPage} />
+                        </div>
+
+                }
+
 
             </div>
             )

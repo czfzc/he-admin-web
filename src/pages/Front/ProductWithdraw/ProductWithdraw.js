@@ -30,6 +30,7 @@ export default class ProductWithdraw extends React.Component{
             size: this.state.pageSize,
             building_id: buildingId
         }).then((res) => {
+            this.state.buildingId=res.data.buildingId
             this.setState({
                 preorders:res.data.content,
                 total:res.data.totalElements,
@@ -90,7 +91,25 @@ export default class ProductWithdraw extends React.Component{
             { title: '商品预付单号', dataIndex: 'id', key: '1',...global.data.getTextTruncProps() },
             { title: '总价', dataIndex: 'totalFee', key: '2' },
             { title: '时间', dataIndex: 'time', key: '3' },
-            { title: '用户id', dataIndex: 'userId', key: '4',...global.data.getTextTruncProps() },
+            { title: '用户id', dataIndex: 'userId', key: '4' },
+            {
+                title:'姓名',
+                render:(text,record)=>{
+                    return record.address.name
+                }
+            },
+            {
+                title:'寝室号',
+                render:(text,record)=>{
+                    return record.address.roomNum
+                }
+            },
+            {
+                title:'电话',
+                render:(text,record)=>{
+                    return record.address.phoneNum
+                }
+            },
             { title: '提货码', dataIndex: 'statusData', key: '8' },
             {
                 title: '状态',

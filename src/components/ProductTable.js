@@ -105,14 +105,7 @@ export default class ProductTable extends React.Component {
                 title: '商品id',
                 dataIndex: 'productId',
                 key: '2',
-                render: (text, record) => {
-                    return (
-                        <Tooltip title="点击查看">
-                        <span onClick={() => {
-                        }}>{text}</span>
-                        </Tooltip>
-                    )
-                }
+                ...global.data.getTextTruncProps()
             }, {
                 title: '预付单id',
                 dataIndex: 'preorderId',
@@ -130,7 +123,6 @@ export default class ProductTable extends React.Component {
                 title: '用户id',
                 dataIndex: 'userid',
                 key: '6',
-                ...global.data.getTextTruncProps()
             }, {
                 title: '时间',
                 dataIndex: 'time',

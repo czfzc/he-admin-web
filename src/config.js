@@ -87,7 +87,7 @@ global.data = {
     getTextTruncProps(){
         return {
             render: (text) => {
-                return text
+                return text.substr(0,7)
             }
         }
     }
